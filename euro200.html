@@ -244,7 +244,7 @@
         <div class="selected-crypto" id="selectedCrypto">
             <h3 id="cryptoName">Crypto Name</h3>
             <p class="order-number">Order #: <span id="orderNumber"></span></p>
-            <p class="amount-to-send">Send: <span id="cryptoAmount">Amount</span> (100$)</p>
+            <p class="amount-to-send">Send: <span id="cryptoAmount">Amount</span> (200$)</p>
             <img class="qrimg" id="cryptoQR" src="" alt="QR Code">
             <p>Address:<br> <span class="cryptoAddress" id="cryptoAddress">Crypto Address</span></p>
             <div class="back-button" onclick="goBack()">← Back to list</div>
@@ -258,7 +258,7 @@
 
     <script>
         let timerInterval;
-        const usdAmount = 100; // Fixed amount in USD for calculation
+        const usdAmount = 200; // Fixed amount in USD for calculation
         let cryptoSymbol; // To store the currently selected cryptocurrency
         let timeRemaining = 30 * 60; // 30 minutes in seconds
         const cryptoSymbols = ["bitcoin", "ethereum", "litecoin", "dogecoin", "solana", "tether"];
