@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinPayments | Accept Cryptocurrency Payments</title>
+    <link rel="icon" type="image/x-icon" href="icoo.ico">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100&display=swap');
+
+        /* General styling */
+        body {
+            font-family: "IBM Plex Mono", serif;
+            background-color: #0079ca;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 8px;
+            padding: 20px;
+            padding-top: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: solid 2px #00000077;
+        }
+
+        .logo {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 170px;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-size: 1em;
+            color: #00000093;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .crypto-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            background-color: #ffffff9d;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .crypto-item:hover {
+            background-color: #e8f0fe;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .crypto-item img {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 5px;
+        }
+
+        .crypto-item span {
+            font-size: 0.9em;
+            color: #000000;
+            margin-top: 5px;
+        }
+
+        .footer {
+            background-color: rgba(0, 132, 255, 0);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #000000;
+        }
+
+        .footer a {
+            display: inline-block;
+            background-color: #0037808f;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .footer a:hover {
+            background-color: #357abd;
+        }
+
+        .selected-crypto {
+            display: none;
+            text-align: center;
+            border: 1px solid #000000;
+            border-radius: 8px;
+        }
+
+        .selected-crypto h3 {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #0c0c0c;
+            text-decoration: underline;
+        }
+
+        .selected-crypto img {
+            width: 150px;
+            height: 150px;
+            margin: 20px 0;
+        }
+
+        .selected-crypto p {
+            font-size: 1em;
+            color: #000000;
+            margin: 10px 0;
+            font-weight: 400;
+        }
+
+        .cryptoAddress {
+            font-size: 1em;
+            color: #fd9800;
+            margin: 10px 0;
+            font-weight: 500;
+            margin-top: 20px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .back-button {
+            display: inline-block;
+            color: #357abd;
+            font-size: 0.9em;
+            margin-top: 15px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .back-button:hover {
+            color: #357abd;
+        }
+
+        .timer {
+            font-size: 1.1em;
+            color: #ff0800;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .order-number, .amount-to-send {
+            font-size: 1em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .container {
+                max-width: 450px;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .container {
+                max-width: 500px;
+            }
+        }
+
+        .qrimg {
+            border-style: solid;
+            border-color: black;
+        }
+    </style>
+</head>
+<body>
+    <img src="CoinPayments.png" alt="Logo" class="logo">
+    <div class="container">
+        <h2>Crypto payment : Global Whites</h2>
+        <p class="subtitle">Secure checkout with CoinPayments<br>Please select a coin:</p>
+
+        <!-- Crypto Grid -->
+        <div class="crypto-grid" id="cryptoGrid">
+            <div class="crypto-item" onclick="selectCrypto('Bitcoin', 'address/btc.png', 'bc1qjm7h2fh0pwh59z2df6uww8php9fl34xhas4jx4', 'bitcoin')">
+                <img src="bitcoin.png" alt="Bitcoin">
+                <span>Bitcoin</span>
+            </div>
+            <div class="crypto-item" onclick="selectCrypto('Ethereum', 'address/eth.png', '0x2F60D725Aa0f0Cab459a8594504209EA09e214AB', 'ethereum')">
+                <img src="ethereum.png" alt="Ethereum">
+                <span>Ethereum</span>
+            </div>
+            <div class="crypto-item" onclick="selectCrypto('Litecoin', 'address/ltc.png', 'ltc1qpsgkj9eq4mk2wlxc3gavlns25uv3fhj30a4f0d', 'litecoin')">
+                <img src="litecoin.png" alt="Litecoin">
+                <span>Litecoin</span>
+            </div>
+            <div class="crypto-item" onclick="selectCrypto('Dogecoin', 'address/dog.png', 'DS54NQtT2VqDhguXaUXA7zaR4vg4inXFhJ', 'dogecoin')">
+                <img src="dogecoin.png" alt="Dogecoin">
+                <span>Dogecoin</span>
+            </div>
+            <div class="crypto-item" onclick="selectCrypto('Solana', 'address/sol.png', 'A8vSWXZsBi9ubU7wDCfkpDgCG8BbZxhSjinM4x1EmQNr', 'solana')">
+                <img src="solana.png" alt="Solana">
+                <span>Solana</span>
+            </div>
+            <div class="crypto-item" onclick="selectCrypto('Tether (Ethereum Network)', 'address/tet.png', '0x2F60D725Aa0f0Cab459a8594504209EA09e214AB', 'tether')">
+                <img src="tether.png" alt="Tether ETH">
+                <span>Tether ETH</span>
+            </div>
+        </div>
+
+        <!-- Selected Crypto View -->
+        <div class="selected-crypto" id="selectedCrypto">
+            <h3 id="cryptoName">Crypto Name</h3>
+            <p class="order-number">Order #: <span id="orderNumber"></span></p>
+            <p class="amount-to-send">Send: <span id="cryptoAmount">Amount</span> (300€)</p>
+            <img class="qrimg" id="cryptoQR" src="" alt="QR Code">
+            <p>Address:<br> <span class="cryptoAddress" id="cryptoAddress">Crypto Address</span></p>
+            <div class="back-button" onclick="goBack()">← Back to list</div>
+        </div>
+        <div class="footer">
+            <div class="timer" id="timer">Payment will expire in: 30:00</div>
+            <p>Over 99% success rate on CoinPayments.</p>
+            <p>Accept Crypto Payments On Your Site With CoinPayments!</p>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        const usdAmount = 300; // Fixed amount in USD for calculation
+        let cryptoSymbol; // To store the currently selected cryptocurrency
+        let timeRemaining = 30 * 60; // 30 minutes in seconds
+        const cryptoSymbols = ["bitcoin", "ethereum", "litecoin", "dogecoin", "solana", "tether"];
+        let cryptoPrices = {}; // To store the prices of all cryptocurrencies
+    
+        // Generate or retrieve a persistent order number from sessionStorage
+        function getOrderNumber() {
+            let orderNumber = sessionStorage.getItem('orderNumber');
+            if (!orderNumber) {
+                orderNumber = generateOrderNumber();
+                sessionStorage.setItem('orderNumber', orderNumber);
+            }
+            return orderNumber;
+        }
+    
+        function generateOrderNumber() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let orderNumber = '';
+            for (let i = 0; i < 6; i++) {
+                orderNumber += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return orderNumber;
+        }
+    
+        // Preload prices for all cryptos on page load
+        async function preloadCryptoPrices() {
+            try {
+                const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoSymbols.join(",")}&vs_currencies=usd`);
+                const data = await response.json();
+    
+                // Save each crypto's price in the cryptoPrices object
+                cryptoSymbols.forEach(symbol => {
+                    cryptoPrices[symbol] = data[symbol]?.usd;
+                });
+    
+                // Store prices in session storage to avoid repeated calls on reload
+                sessionStorage.setItem("cryptoPrices", JSON.stringify(cryptoPrices));
+            } catch (error) {
+                console.error("Error preloading crypto prices:", error);
+            }
+        }
+    
+        async function getCryptoAmount(symbol) {
+            // If prices are available, calculate the crypto amount instantly
+            if (cryptoPrices[symbol]) {
+                return (usdAmount / cryptoPrices[symbol]).toFixed(6);
+            } else {
+                return "Price unavailable";
+            }
+        }
+    
+        async function selectCrypto(name, qrSrc, address, symbol) {
+            cryptoSymbol = symbol;
+            document.getElementById("cryptoGrid").style.display = "none";
+            document.getElementById("selectedCrypto").style.display = "block";
+            document.getElementById("cryptoName").innerText = name;
+            document.getElementById("cryptoQR").src = qrSrc;
+            document.getElementById("cryptoAddress").innerText = address;
+            document.getElementById("orderNumber").innerText = getOrderNumber();
+    
+            // Display the $400 equivalent amount instantly for selected crypto
+            const amount = await getCryptoAmount(symbol);
+            document.getElementById("cryptoAmount").innerText = `${amount} ${symbol.toUpperCase()}`;
+        }
+    
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById("timer").innerText = `Payment will expire in: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("timer").innerText = "Payment has expired";
+                }
+            }, 1000);
+        }
+    
+        function goBack() {
+            document.getElementById("cryptoGrid").style.display = "grid";
+            document.getElementById("selectedCrypto").style.display = "none";
+        }
+    
+        // Start the timer and preload prices once when the page loads
+        window.onload = async function() {
+            if (!timerInterval) {
+                startTimer();
+            }
+    
+            // Load prices from session storage or preload them if not available
+            const storedPrices = sessionStorage.getItem("cryptoPrices");
+            if (storedPrices) {
+                cryptoPrices = JSON.parse(storedPrices);
+            } else {
+                await preloadCryptoPrices();
+            }
+        }
+    </script>
+    
+    
+    
+</body>
+</html>
